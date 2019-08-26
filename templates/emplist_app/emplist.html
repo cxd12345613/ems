@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+{% load static %}
+<html>
+	<head>
+
+		<title>emplist</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+         <style>
+    .a{
+        width:20px;
+        height: 20px;
+        border:1px solid #e1e2e3;
+        cursor:pointer;
+        display: inline-block;
+        text-align: center;
+        line-height: 20px;
+    }
+    .b{
+        border:0;
+        width:20px;
+        height: 20px;
+        cursor:pointer;
+        display: inline-block;
+        text-align: center;
+        line-height: 20px;
+    }
+    a{
+        text-decoration:none;
+    }
+</style>
+	</head>
+	<body>
+		<div id="wrap">
+			<div id="top_content"> 
+				<div id="header">
+					<div id="rightheader">
+						<p>
+							{{ time }}
+							<br />
+						</p>
+					</div>
+					<div id="topheader">
+						<h1 id="title">
+							<a href="#">员工管理主页面</a>
+						</h1>
+					</div>
+					<div id="navigation">
+					</div>
+				</div>
+				<div id="content">
+					<p id="whereami">
+					</p>
+					<h1>
+						欢迎您登陆员工管理系统!
+					</h1>
+					<table class="table">
+						<tr class="table_header"><td>ID</td><td>姓名</td><td>头像</td><td>薪水</td><td>年龄</td><td>其他选项</td>
+						</tr>
+                                    {#获取该页码的所有对象page.object_list#}
+						{% for foo in page.object_list %}
+                            <tr>
+                                <td>{{ foo.id }}</td>
+                                <td>{{ foo.name }}</td>
+                                <td><img src="{% static foo.headpic.url %}" alt="图片丢失" width="50px"></td>
+                                <td>{{ foo.salary }} </td>
+                                <td>{{ foo.age }}</td>
+                                <td><a href="{% url 'emplist_app:delEmp' %}?id={{ foo.id }}&number={{ page.number }}">删除</a>/<a href="{% url 'emplist_app:updataEmp' %}?id={{ foo.id }}&number={{ page.number }}">修改</a></td>
+                            </tr>
+                        {% endfor %}
+					</table>
+                {#如果存在上一页，显示上一页#}
+                {% if page.has_previous %}
+                    <a href="{% url 'emplist_app:emp' %}?number={{ page.previous_page_number }}">上一页</a>
+                {% endif %}
+                    {#对总页数进行遍历，显示每页信息#}
+                    {% for p in page.paginator.page_range %}
+
+                        {% if p == page.number %}
+                            <a href="{% url 'emplist_app:emp' %}?number={{ p }}" class="b">{{ p }}</a>
+
+                        {% else %}
+                            <a href="{% url 'emplist_app:emp' %}?number={{ p }}" class="a">{{ p }}</a>
+
+                        {% endif %}
+                    {% endfor %}
+
+                {% if page.has_next %}
+                    <a href="{% url 'emplist_app:emp' %}?number={{ page.next_page_number}}">下一页</a>
+                {% endif %}
+					<p>
+						<input type="button" class="button" value="添加员工" onclick="location='{% url 'emplist_app:empadd' %}'"/>
+					</p>
+				</div>
+			</div>
+			<div id="footer">
+				<div id="footer_bg">
+				cxd@百知.165.3.com
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+{% load static %}
+<html>
+	<head>
+		<title>update Emp</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" type="text/css"
+			href="{% static 'css/style.css' %}" />
+	</head>
+
+	<body>
+		<div id="wrap">
+			<div id="top_content">
+					<div id="header">
+						<div id="rightheader">
+							<p>
+								{{ time }}
+								<br />
+							</p>
+						</div>
+						<div id="topheader">
+							<h1 id="title">
+								<a href="#">修改页面</a>
+							</h1>
+						</div>
+						<div id="navigation">
+						</div>
+					</div>
+				<div id="content">
+					<p id="whereami">
+					</p>
+					<h1>
+						修改员工信息页面:
+					</h1>
+					<form action="{% url 'emplist_app:updataEmplogic' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+						<table cellpadding="0" cellspacing="0" border="0"
+							class="form_table">
+							<tr>
+								<td valign="middle" align="right">
+									id:
+								</td>
+								<td valign="middle" align="left">
+									{{ emp.id }}
+								</td>
+							</tr>
+							<tr>
+								<td valign="middle" align="right">
+									名字:
+								</td>
+								<td valign="middle" align="left">
+                                    {{ emp.name }} <br>
+									修改名字为：<input type="text" class="inputgri" name="name" />
+								</td>
+							</tr>
+                            <tr>
+								<td valign="middle" align="right">
+									头像:
+								</td>
+								<td valign="middle" align="left">
+                                    <img src="{% static emp.headpic.url %}" alt="图片丢失" width="50px"> <br>
+									修改头像为：<input type="file" class="inputgri" name="file" />
+								</td>
+							</tr>
+							<tr>
+								<td valign="middle" align="right">
+									薪水:
+								</td>
+								<td valign="middle" align="left">
+                                    {{ emp.salary }} <br>
+									修改薪水为：<input type="text" class="inputgri" name="salary" />
+								</td>
+							</tr>
+							<tr>
+								<td valign="middle" align="right">
+									年龄:
+								</td>
+								<td valign="middle" align="left">
+                                    {{ emp.age }} <br>
+									修改年龄为：<input type="text" class="inputgri" name="age" />
+								</td>
+							</tr>
+						</table>
+						<p>
+							<input type="submit" class="button" value="提交" />
+						</p>
+					</form>
+				</div>
+			</div>
+			<div id="footer">
+				<div id="footer_bg">
+					cxd@百知.165.3.com
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

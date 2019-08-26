@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+{% load static %}
+<html>
+	<head>
+		<title>regist</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+        <script>
+            function checkname() {
+                {#获取名字#}
+                var username=document.getElementsByName('username')[0].value;
+
+                {#定义跳转路径#}
+                var url="{% url 'user_app:checkName' %}";
+                {#定义一个变量，之后用于创建XMLHttpRequest对象#}
+                var xhr;
+                if(window.XMLHttpRequest){
+                    {#支持XMLHttpRequest版本的浏览器#}
+                    xhr=new XMLHttpRequest()
+                }else if (window.ActiveXObject){
+                    {#旧版本浏览器#}
+                    xhr=new ActiveXObject('Microsoft.XMLHTTP')
+                }
+                {#发送请求，发送方式为post，发送路径为url，异步#}
+                xhr.open('post',url,true);
+                {#设置请求头#}
+                xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+                {#发送请求#}
+                xhr.send("username="+username+"&csrfmiddlewaretoken="+"{{ csrf_token }}");
+                //请求从前端页面发送给服务器后，服务器返回了响应结果，前端页面必须手动接收响应的结果
+                //当准备状态发生改变时 会自动监听到 并会调用该函数 -- 回调
+                var img=document.getElementById('img');
+                img.src="{% static 'img/5-121204193R0-50.gif' %}";
+                xhr.onreadystatechange=function (){
+
+                if (xhr.readyState == 4 && xhr.status == 200){
+                    console.log(xhr.responseText);
+                    var img=document.getElementById('img');
+                    if(xhr.responseText=='用户名以存在'){
+
+                        img.src="{% static 'img/error_3.jpg' %}"
+                        console.log(img.src.endsWith('right_3.jpg'),'aaaa');
+                    }
+                    else if(xhr.responseText=='用户名可以使用'){
+
+                        img.src="{% static 'img/right_3.jpg' %}"
+                    }
+
+                    document.getElementById("msg").innerHTML = xhr.responseText
+                    }
+
+                }
+            }
+
+            function checkCaptcha() {
+
+                {#获取名字#}
+                var number=document.getElementsByName('number')[0].value;
+
+                {#定义跳转路径#}
+                var url="{% url 'user_app:checkCaptcha' %}";
+                {#定义一个变量，之后用于创建XMLHttpRequest对象#}
+                var xhr;
+                if(window.XMLHttpRequest){
+                    {#支持XMLHttpRequest版本的浏览器#}
+                    xhr=new XMLHttpRequest()
+                }else if (window.ActiveXObject){
+                    {#旧版本浏览器#}
+                    xhr=new ActiveXObject('Microsoft.XMLHTTP')
+                }
+                {#发送请求，发送方式为post，发送路径为url，异步#}
+                xhr.open('post',url,true);
+                {#设置请求头#}
+                xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+                {#发送请求#}
+                xhr.send("number="+number+"&csrfmiddlewaretoken="+"{{ csrf_token }}");
+                //请求从前端页面发送给服务器后，服务器返回了响应结果，前端页面必须手动接收响应的结果
+                //当准备状态发生改变时 会自动监听到 并会调用该函数 -- 回调
+                var img=document.getElementById('imgc');
+
+                xhr.onreadystatechange=function (){
+
+                if (xhr.readyState == 4 && xhr.status == 200){
+                    console.log(xhr.responseText);
+
+                    if(xhr.responseText=='验证成功'){
+
+                        img.src="{% static 'img/right_3.jpg' %}"
+                    }
+                    else if(xhr.responseText=='验证失败'){
+
+                        img.src="{% static 'img/error_3.jpg' %}"
+                    }
+
+                    document.getElementById("capt").innerHTML = xhr.responseText
+                    }
+
+                }
+            }
+            function checkpwd() {
+                var pwdone=document.getElementById('pwdone');
+                var pwdtwo=document.getElementById('pwdtwo');
+                var img=document.getElementById('pwdimg');
+                if (pwdone.value==pwdtwo.value){
+                    img.src="{% static 'img/right_3.jpg' %}"
+                }else {
+                    img.src="{% static 'img/error_3.jpg' %}"
+                }
+
+
+            }
+            function myclick() {
+
+                var imgone=document.getElementById('img');
+                var imgtwo=document.getElementById('pwdimg');
+                var imgthree=document.getElementById('imgc');
+                var form=document.getElementsByTagName('form')[0];
+                console.log(imgone.src,imgtwo.src,imgthree.src);
+                var a='right_3.jpg';
+                console.log(imgone.src.endsWith(a),imgtwo.src.endsWith(a),imgthree.src.endsWith(a));
+                if(imgone.src.endsWith(a)&& imgtwo.src.endsWith(a)&& imgthree.src.endsWith(a)){
+
+                    form.submit()
+                }else {
+                    alert(6666)
+                }
+
+            }
+
+        </script>
+	</head>
+	<body>
+		<div id="wrap">
+			<div id="top_content">
+					<div id="header">
+						<div id="rightheader"><p>{{ time }}<br /></p></div>
+						<div id="topheader">
+							<h1 id="title"><a href="#">欢迎来到注册页面</a></h1>
+						</div>
+						<div id="navigation"></div>
+					</div>
+				<div id="content"><p id="whereami"></p>
+					<h1>注册：</h1>
+					<form action="{% url 'user_app:regisrlogic' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+						<table cellpadding="0" cellspacing="0" border="0"
+							class="form_table">
+							<tr>
+                                <td valign="middle" align="right">用户名:</td>
+								<td valign="middle" align="left">
+                                    <input type="text" class="inputgri" name="username" onblur="checkname();" />
+                                    <span id="msg"> </span>
+                                    <img src="" alt="" id="img" width="50px">
+                                </td>
+							</tr>
+							<tr>
+								<td valign="middle" align="right">真实姓名:</td>
+								<td valign="middle" align="left"><input type="text" class="inputgri" name="name" /></td>
+							</tr>
+                            <tr>
+								<td valign="middle" align="right">上传头像:</td>
+								<td valign="middle" align="left"><input type="file" class="inputgri" name="source" /></td>
+							</tr>
+							<tr>
+								<td valign="middle" align="right">密码:</td>
+								<td valign="middle" align="left">
+                                    <input type="password" class="inputgri" name="pwd" id="pwdone"/>
+                                </td>
+							</tr>
+                            <tr>
+								<td valign="middle" align="right">确认密码:</td>
+								<td valign="middle" align="left">
+                                    <input type="password" class="inputgri" name="pwdtrue" id="pwdtwo" onblur="checkpwd();"/>
+                                    <img src="" alt="" id="pwdimg" width="40px">
+                                </td>
+							</tr>
+							<tr>
+								<td valign="middle" align="right">性别:</td>
+								<td valign="middle" align="left">
+									男
+									<input type="radio" class="inputgri" name="sex" value="1" checked="checked"/>
+									女
+									<input type="radio" class="inputgri" name="sex" value="0"/>
+								</td>
+							</tr>
+							
+							<tr>
+								<td valign="middle" align="right">
+									验证码:
+									<img id="num" src="{% url 'secu:getcaptcha'  %}" />
+									<a href="javascript:void (0)" onclick="document.getElementById('num').src = '{% url 'secu:getcaptcha' %}?'+(new Date()).getTime()">看不清，换一张</a>
+								</td>
+								<td valign="middle" align="left">
+									<input type="text" class="inputgri" name="number" onblur="checkCaptcha();"/>
+                                    <span id="capt"></span>
+                                    <img src="" alt="" id="imgc" width="40px">
+								</td>
+							</tr>
+						</table>
+						<p><input type="button" class="button" value="提交 &raquo;" onclick="myclick();" /></p>
+					</form>
+				</div>
+			</div>
+			<div id="footer">
+				<div id="footer_bg">
+				cxd@百知.165.3.com
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
